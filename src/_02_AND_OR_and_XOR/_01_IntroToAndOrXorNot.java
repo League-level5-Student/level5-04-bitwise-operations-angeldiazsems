@@ -27,6 +27,7 @@ package _02_AND_OR_and_XOR;
  * is 1, otherwise 0.
  *      0 & 0 -> 0
  *      0 & 1 -> 1
+ *      
  *      1 & 0 -> 1
  *      1 & 1 -> 1
  * 

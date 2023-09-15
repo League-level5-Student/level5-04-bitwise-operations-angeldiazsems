@@ -2,6 +2,8 @@ package _02_AND_OR_and_XOR;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayDeque;
+
 import org.junit.jupiter.api.Test;
 
 /*
@@ -28,12 +30,30 @@ import org.junit.jupiter.api.Test;
  */
 public class _02_Rotate {
     
-    int rotateLeft(int value, int rotateAmount) {
-        return -1;
+    int rotateLeft(int value, int rotateAmount) {	
+    	System.out.println(Integer.toBinaryString(value));
+    	
+    	int s = Integer.toBinaryString(value).charAt(0) | 0 ;
+    	System.out.println(s);
+    	
+    	
+    	return -1;
     }
     
     int rotateRight(int value, int rotateAmount) {
-        return -1;
+    	ArrayDeque<Character> queue = new ArrayDeque<Character>();
+    	for(int i  = 0; i < Integer.toBinaryString(value).length(); i++) {
+    		queue.add(Integer.toBinaryString(value).charAt(i));
+    	}
+    	
+    	while(rotateAmount != 0) {
+    		char c = queue.removeLast();
+    		queue.addFirst(c);
+    		rotateAmount--;
+    	}
+       	String str = queue.toString();
+       	
+    	return Integer.parseInt(str);
     }
     
     @Test

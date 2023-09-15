@@ -34,7 +34,8 @@ public class _01_BinaryPrinter {
 
     public void printIntBinary(int i) {
         // Create 2 short variables
-
+    	short one;
+    	short two;
         // Use bit shifting and masking (&) to save the first
         // 16 bits of i in one short, and the second 16 bits of
         // i in the other short

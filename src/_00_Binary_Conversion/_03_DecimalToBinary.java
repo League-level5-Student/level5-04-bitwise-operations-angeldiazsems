@@ -12,7 +12,7 @@ package _00_Binary_Conversion;
  *    Example, convert decimal 43 into binary:
  *    43
  *    43 / 2 = 21 remainder 1
- *    21 / 2 = 10 remainder 1
+ *    21 / 2 = 10 remainder 1      //"divide" is just modulo in coding
  *    10 / 2 = 5  remainder 0
  *    5  / 2 = 2  remainder 1
  *    2  / 2 = 1  remainder 0
