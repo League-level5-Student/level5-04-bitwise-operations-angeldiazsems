@@ -29,64 +29,72 @@ import org.junit.jupiter.api.Test;
  *      11111111 11111111 11111111 11110001   // rotate left by 1
  */
 public class _02_Rotate {
-    
-    int rotateLeft(int value, int rotateAmount) {	
-    	System.out.println(Integer.toBinaryString(value));
-    	
-    	int s = Integer.toBinaryString(value).charAt(0) | 0 ;
-    	System.out.println(s);
-    	
-    	
-    	return -1;
-    }
-    
-    int rotateRight(int value, int rotateAmount) {
-    	ArrayDeque<Character> queue = new ArrayDeque<Character>();
-    	for(int i  = 0; i < Integer.toBinaryString(value).length(); i++) {
-    		queue.add(Integer.toBinaryString(value).charAt(i));
-    	}
-    	
-    	while(rotateAmount != 0) {
-    		char c = queue.removeLast();
-    		queue.addFirst(c);
-    		rotateAmount--;
-    	}
-       	String str = queue.toString();
-       	
-    	return Integer.parseInt(str);
-    }
-    
-    @Test
-    void testRotateLeft() {
-        int i = -8;
 
-        int result = rotateLeft(i, 1);
-        System.out.println("Left rotate tests");
-        System.out.println("Expected: " + Integer.toBinaryString(-15));
-        System.out.println("Actual  : " + Integer.toBinaryString(result));
-        assertEquals(-15, result);
-        
-        result = rotateLeft(i, 3);
-        System.out.println();
-        System.out.println("Expected: " + Integer.toBinaryString(-57));
-        System.out.println("Actual  : " + Integer.toBinaryString(result));
-        assertEquals(-57, result);
-    }
-    
-    @Test
-    void testRotateRight() {
-        int i = 7;
-        
-        int result = rotateRight(i, 1);
-        System.out.println("\nRight rotate tests");
-        System.out.println("Expected: " + Integer.toBinaryString(-2147483645));
-        System.out.println("Actual  : " + Integer.toBinaryString(result));
-        assertEquals(-2147483645, result);
-        
-        result = rotateRight(i, 16);
-        System.out.println();
-        System.out.println("Expected: " + Integer.toBinaryString(458752));
-        System.out.println("Actual  : " + Integer.toBinaryString(result));
-        assertEquals(458752, result);
-    }
+	int rotateLeft(int value, int rotateAmount) {
+		for (int i = 0; i < rotateAmount; i++) {
+			int leftEdge = Integer.toBinaryString(value).charAt(i) & 1;
+			// ^ return 1 if its one, otherwise return 0
+			value = value << 1;//shift left one
+			value = value+leftEdge;//add byte that got pushed off to the back again
+		}
+
+		return value;
+	}
+
+	int rotateRight(int value, int rotateAmount) {
+		String binaryString = Integer.toBinaryString(value);
+		System.out.println("binary is "+binaryString);
+		
+		for (int i = 0; i < rotateAmount; i++) {
+			int rightEdge = binaryString.charAt(binaryString.length()-1) & 1;
+			System.out.println("Byte on the right side is "+rightEdge);
+			// ^ return 1 if its one, otherwise return 0
+			value = value >>> 1;//shift right one
+		System.out.println("binary after one right shift is "+Integer.toBinaryString(value));
+
+			String deleted = ""+rightEdge;
+			binaryString = Integer.toBinaryString(value); //new string for shifted binary			
+
+			StringBuilder bob = new StringBuilder(binaryString);
+			bob.insert(0, deleted);
+			System.out.println("binary after adding the old right byte "+bob.toString());
+			binaryString = bob.toString();
+		}
+
+		return Integer.parseInt(binaryString);
+	}
+
+	@Test
+	void testRotateLeft() {
+		int i = -8;
+
+		int result = rotateLeft(i, 1);
+		System.out.println("Left rotate tests");
+		System.out.println("Expected: " + Integer.toBinaryString(-15));
+		System.out.println("Actual  : " + Integer.toBinaryString(result));
+		assertEquals(-15, result);
+
+		result = rotateLeft(i, 3);
+		System.out.println();
+		System.out.println("Expected: " + Integer.toBinaryString(-57));
+		System.out.println("Actual  : " + Integer.toBinaryString(result));
+		assertEquals(-57, result);
+	}
+
+	@Test
+	void testRotateRight() {
+		int i = 7;
+
+		int result = rotateRight(i, 1);
+		System.out.println("\nRight rotate tests");
+		System.out.println("Expected: " + Integer.toBinaryString(-2147483645));
+		System.out.println("Actual  : " + Integer.toBinaryString(result));
+		assertEquals(-2147483645, result);
+
+		result = rotateRight(i, 16);
+		System.out.println();
+		System.out.println("Expected: " + Integer.toBinaryString(458752));
+		System.out.println("Actual  : " + Integer.toBinaryString(result));
+		assertEquals(458752, result);
+	}
 }
