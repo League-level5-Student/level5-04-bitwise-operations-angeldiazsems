@@ -23,7 +23,7 @@ import javax.swing.JTextField;
  * Programmers sometimes use a number system called hexadecimal that has 16
  * different possible characters per digit. Each digit can be from 0 to F,
  *     hex character: 0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
- *     decimal value: 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+ *     decimal value: 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 1111
  * 
  * Hex values are prefixed with a 0x in code,
  *      int hex = 0x1F;     // 31 decimal, 11111 binary
@@ -53,14 +53,72 @@ public class _02_HexadecimalPrinter implements ActionListener {
 	 * don't have to handle negative numbers unless you want the challenge!
 	 */
 	String binaryToHex(String binaryStr) {
-
+		if(binaryStr.length() == 0) {
+			return "-";
+		}
+		String hex = "";
+		int deci = Integer.parseInt(binaryToDec(binaryStr));
+		do {
+			int quote = deci>>4;
+			char hexa = '\0';
+			int rem = deci%16;
+			String str = Integer.toString(rem);
+			hex += check(str);
+			deci = quote;
+			
+			
+		}
+		while(deci!= 0);
 		
 		
-		
-		
-		
-		return "-";
+		return hex;
 	}
+	String check(String num) {
+		if(num.equals("0")) {
+			return "0";
+		}
+		else if(num.equals("1")) {
+			return "1";
+		}else if(num.equals("2")) {
+			return "2";
+		}else if(num.equals("3")) {
+			return "3";
+		}
+		else if(num.equals("4")) {
+			return "4";
+		}else if(num.equals("5")) {
+			return "5";
+		}
+		else if(num.equals("6")) {
+			return "6";
+		}
+		else if(num.equals("7")) {
+			return "7";
+		}else if(num.equals("8")) {
+			return "8";
+		}else if(num.equals("9")) {
+			return "9";
+		}
+		else if(num.equals("10")) {
+			return "A";
+		}else if(num.equals("11")) {
+			return "B";
+		}
+		else if(num.equals("12")) {
+			return "C";
+		}else if(num.equals("13")) {
+			return "D";
+		}else if(num.equals("14")) {
+			return "E";
+		}
+		else if(num.equals("15")) {
+			return "F";
+		}
+
+	return "";
+	}
+	
+	
 
 	String binaryToDec(String binaryStr) {
 		StringBuilder bob = new StringBuilder(binaryStr);
@@ -82,11 +140,23 @@ public class _02_HexadecimalPrinter implements ActionListener {
 	/*
 	 * ASCII values are exactly 8 bits so return '-' if there isn't.
 	 */
+	//exactly 8 1/0's
 	String binaryToAscii(String binaryStr) {
 		if (binaryStr.length() != 8) {
 			return "-";
 		}
-
+		String deci = binaryToDec(binaryStr);
+		int decNum = Integer.parseInt(deci);
+		if(decNum >= 65 && decNum <= 90) { //if its an uppercase letter
+			for(int i = 0; i < 26; i++) {
+				
+			}
+		}
+		//cast chat into an int to get decimal 
+		
+		
+		
+		
 		return "-";
 	}
 
