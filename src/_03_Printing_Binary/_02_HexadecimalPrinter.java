@@ -146,18 +146,11 @@ public class _02_HexadecimalPrinter implements ActionListener {
 			return "-";
 		}
 		String deci = binaryToDec(binaryStr);
-		int decNum = Integer.parseInt(deci);
-		if(decNum >= 65 && decNum <= 90) { //if its an uppercase letter
-			for(int i = 0; i < 26; i++) {
-				
-			}
-		}
-		//cast chat into an int to get decimal 
+		int dec = Integer.parseInt(deci);
+		System.out.println(dec);
+		char asci = (char) dec;
 		
-		
-		
-		
-		return "-";
+		return ""+asci;
 	}
 
 	public static void main(String[] args) {
