@@ -1,5 +1,7 @@
 package _05_Base64_Decoder;
 
+import _00_Binary_Conversion._03_DecimalToBinary;
+
 /*
  * Base 64 is a way of encoding binary data using text.
  * Each number 0-63 is mapped to a character.
@@ -15,7 +17,7 @@ package _05_Base64_Decoder;
  * 
  * Since the numbers 0 through 63 can be represented using 6 bits,
  * every four (4) characters will represent twenty four (24) bits of data.
- *      0b111111    // 63 decimal, all 6 bits set to 1
+ *      0b111111 = index 63    // 63 decimal, all 6 bits set to 1
  *      4 * 6 = 24  // 4 characters * (6 bits / character)
  * 
  * Even though only 6 bits are needed to represent each character in the
@@ -45,30 +47,75 @@ package _05_Base64_Decoder;
  */
 public class Base64Decoder {
 
-    final static char[] base64Chars = {
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
-    };
+	final static char[] base64Chars = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+			'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+			'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5',
+			'6', '7', '8', '9', '+', '/' };
 
-    //1. Complete this method so that it returns the index in
-    //   the base64Chars array that corresponds to the passed in char.
-    public static byte convertBase64Char(char c){
-        return 0;
-    }
+	// 1. Complete this method so that it returns the index in
+	// the base64Chars array that corresponds to the passed in char.
+	public static byte convertBase64Char(char c) {
+		for (int i = 0; i < base64Chars.length; i++) {
+			if (base64Chars[i] == c) {
+				return (byte) i;
+			}
+		}
+		return -1;
+	}
 
-    //2. Complete this method so that it will take in a string that is 4
-    //   characters long and return an array of 3 bytes (24 bits). The byte
-    //   array should be the binary value of the encoded characters.
-    public static byte[] convert4CharsTo24Bits(String s){
-        return null;
-    }
+	// 2. Complete this method so that it will take in a string that is 4
+	// characters long and return an array of 3 bytes (24 bits). The byte
+	// array should be the binary value of the encoded characters.
+	public static byte[] convert4CharsTo24Bits(String s) {
+		// 4 characters = 4 bytes
+		// each byte has 8 bits but only first 6 bits are used
+		// take first 6 bits of 1st byte then add with last usable 2 bits from second to
+		// create one 8-bit byte
+		_00_Binary_Conversion._03_DecimalToBinary con = new _00_Binary_Conversion._03_DecimalToBinary();
 
-    //3. Complete this method so that it takes in a string of any length
-    //   and returns the full byte array of the decoded base64 characters.
-    public static byte[] base64StringToByteArray(String file) {
-        return null;
-    }
+		byte[] arr = new byte[3];
+
+		for (int i = 0; i < 3; i++) {
+			char c = s.charAt(i);
+			byte index = convertBase64Char(c);
+			String binary = con.convertDecimalToBinary(index);
+			while (binary.length() != 8) { // make sure you have 8 bits
+				binary = 0 + binary;
+			}
+			System.out.println(binary);
+			byte test = (byte) (Integer.parseInt(binary));
+			System.out.println(test); //TEST IS TURNING IT INTO A ONE BIT BYTE
+			test = arr[i];
+		}
+
+		byte[] bite = new byte[2];
+
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = (byte) (arr[i] << 2); // move the useless bits to the rightmost side
+			if (i != 0) {
+				bite[i - 1] = (byte) (arr[i] & (3 << 6)); // store the 2 leftmost bits
+			}
+		}
+		byte[] finalArr = new byte[2];
+
+		for (int i = 0; i < finalArr.length; i++) {
+			String eightBit = Integer.toString(arr[i]);
+			String ending = Integer.toString(bite[i]);
+			StringBuilder bob = new StringBuilder(eightBit);
+			bob.delete(eightBit.length() - 2, eightBit.length() - 1); //delete the 2 bits at end
+			bob.append(ending);                             //add the first two bits from the byte ahead of you
+			byte bitten = (byte) Integer.parseInt(bob.toString());
+			finalArr[i] = bitten;
+		}
+
+	
+
+		return finalArr;
+	}
+
+	// 3. Complete this method so that it takes in a string of any length
+	// and returns the full byte array of the decoded base64 characters.
+	public static byte[] base64StringToByteArray(String file) {
+		return null;
+	}
 }

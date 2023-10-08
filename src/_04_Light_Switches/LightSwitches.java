@@ -49,18 +49,23 @@ public class LightSwitches implements GameControlScene {
 
     // 8-bit bitmap. Leave as int so methods won't have to cast to a byte
     int lightsOnOff = 0;
+    //00000000
 
     /*
      * This method should check if the specified light is on, example:
      * index = 6        // return true if pink is on (bit 6 == 1)
      */
     boolean isLightOn(int index) {
-    	for(int i = 0; i < lightColors.length; i++) {
-    		if(lightColors[index].equals(1)) {
-    			return true;
-    		}
+    	int test = lightsOnOff&(1<<index); 
+    	if(test == 0) {
+    		return false;
     	}
-        return false;
+    	return true;
+    //  00010010  	
+    //	00000100
+    	
+    //  00000000 if index is off you will get all zeros, if not you will get a single one
+   //
     }
     
     /*
@@ -69,6 +74,11 @@ public class LightSwitches implements GameControlScene {
      */
     void turnLightOn(int index) {
     	   lightsOnOff = lightsOnOff|(1<<index);
+    	   //00000001 -> 00000100 -> 00000100 | 00001101
+        // one  	    shift           
+    	   
+    	   
+    	   
     }
     
     /*
@@ -77,41 +87,52 @@ public class LightSwitches implements GameControlScene {
      */
     void turnLightOff(int index) {
         lightsOnOff = lightsOnOff&~(1<<index);
-        
+        //00000001 -> 00000100 -> 11111011 & 00001101
+        // one  	    shift      inverse     when compared everyone but the target is the same
+ 
+  
     }
     
     /*
      * This method should be able to turn on multiple lights
      * lightsBitmap = 0b01100110  // lights 1, 2, 5, 6 on
-     */
+     */            //   00011001
     void turnMultiLightsOn(int lightsBitmap) {
     	lightsOnOff = lightsOnOff|lightsBitmap;
+    	//OR: if any one of the values being compared are one, return one
+    	
     }
     
     /*
      * This method should be able to turn off multiple lights
      * lightsBitmap = 0b10000001  // lights 0, 7 off
-     */
+     */             //  10010001 
     void turnMultiLightsOff(int lightsBitmap) {
-    	lightsOnoff = lightsOnOff&~lightsBitMap;
+    	lightsOnOff = lightsOnOff^lightsBitmap;
+    	  
+    	//EXCLUSIVEOR: if the values are the same return 0, otherwise 1
+    	//
     }
     
     /*
      * This method should toggle the state of multiple lights
      * example input:
-     * lightsOnOff  = 0b10000001  // blue(0) and cyan(7) on
-     * lightsBitmap = 0b10011001  // toggle lights 0, 3, 4, 7
+     * lightsOnOff  = 0b1110001  // blue(0) and cyan(7) on
+     * lightsBitmap = 0b1001101  // toggle lights 0, 3, 4, 7
+     * 
+     * 
      * output:
      * lightsOnOff  = 0b00011000  // blue(0) and cyan(7) off,
      *                               orange(3) and yellow(4) on
      */
     void toggleLights(int lightsBitmap) {
-    	String bitMap = Integer.toString(lightsBitmap);
-    	String lightsOnOf = Integer.toString(lightsOnOff);
-    	for(int i = 0; i < lightsOnOff; i++) {
+    	int old = lightsOnOff;
+    	lightsOnOff = lightsOnOff^lightsBitmap; //turn off lights
     	
-    	}
-    	
+    	lightsBitmap = lightsBitmap^old; //update bitmap
+    			
+    	lightsOnOff = lightsOnOff|lightsBitmap; // turn on lights
+
     }
     
     void runLightSequence1() {

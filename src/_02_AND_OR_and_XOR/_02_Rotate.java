@@ -42,27 +42,19 @@ public class _02_Rotate {
 	}
 
 	int rotateRight(int value, int rotateAmount) {
-		String binaryString = Integer.toBinaryString(value);
-		System.out.println("binary is "+binaryString);
-		
-		for (int i = 0; i < rotateAmount; i++) {
-			int rightEdge = binaryString.charAt(binaryString.length()-1) & 1;
-			System.out.println("Byte on the right side is "+rightEdge);
-			// ^ return 1 if its one, otherwise return 0
-			value = value >>> 1;//shift right one
-		System.out.println("binary after one right shift is "+Integer.toBinaryString(value));
+		    for (int i = 0; i < rotateAmount; i++) {
+		        int rightEdge = value & 1; //get bit on right edge
+		        value = value >> 1; //shift one
+		        if (rightEdge != 0) {
+		            value = value | (1 << 32);  //int's have 32 bits, so u get 1000000...
+		        } else {                        // instead of ...000000001
+		            value = value &~(1 << 32); 
+		            }
+		    }
 
-			String deleted = ""+rightEdge;
-			binaryString = Integer.toBinaryString(value); //new string for shifted binary			
-
-			StringBuilder bob = new StringBuilder(binaryString);
-			bob.insert(0, deleted);
-			System.out.println("binary after adding the old right byte "+bob.toString());
-			binaryString = bob.toString();
+		    return value;
 		}
-
-		return Integer.parseInt(binaryString);
-	}
+	
 
 	@Test
 	void testRotateLeft() {
