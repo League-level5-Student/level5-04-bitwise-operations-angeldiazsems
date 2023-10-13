@@ -70,52 +70,37 @@ public class Base64Decoder {
 		// 4 characters = 4 bytes
 		// each byte has 8 bits but only first 6 bits are used
 		// take first 6 bits of 1st byte then add with last usable 2 bits from second to
-		// create one 8-bit byte
-		_00_Binary_Conversion._03_DecimalToBinary con = new _00_Binary_Conversion._03_DecimalToBinary();
-
-		byte[] arr = new byte[3];
-
-		for (int i = 0; i < 3; i++) {
-			char c = s.charAt(i);
-			byte index = convertBase64Char(c);
-			String binary = con.convertDecimalToBinary(index);
-			while (binary.length() != 8) { // make sure you have 8 bits
-				binary = 0 + binary;
-			}
-			System.out.println(binary);
-			byte test = (byte) (Integer.parseInt(binary));
-			System.out.println(test); //TEST IS TURNING IT INTO A ONE BIT BYTE
-			test = arr[i];
-		}
-
-		byte[] bite = new byte[2];
-
-		for (int i = 0; i < arr.length; i++) {
-			arr[i] = (byte) (arr[i] << 2); // move the useless bits to the rightmost side
-			if (i != 0) {
-				bite[i - 1] = (byte) (arr[i] & (3 << 6)); // store the 2 leftmost bits
-			}
-		}
-		byte[] finalArr = new byte[2];
-
-		for (int i = 0; i < finalArr.length; i++) {
-			String eightBit = Integer.toString(arr[i]);
-			String ending = Integer.toString(bite[i]);
-			StringBuilder bob = new StringBuilder(eightBit);
-			bob.delete(eightBit.length() - 2, eightBit.length() - 1); //delete the 2 bits at end
-			bob.append(ending);                             //add the first two bits from the byte ahead of you
-			byte bitten = (byte) Integer.parseInt(bob.toString());
-			finalArr[i] = bitten;
-		}
-
-	
-
-		return finalArr;
+		// create three 8-bit byte
+		byte[] finalArr = new byte[3];      //zeros on left              //zeros in middle
+		char[] arr = s.toCharArray(); 
+		finalArr[0] = (byte) ((convertBase64Char(arr[0]) << 2) + (convertBase64Char(arr[1]) >> 4));
+		finalArr[1] = (byte) ((convertBase64Char(arr[1]) << 4) + (convertBase64Char(arr[2]) >> 2));
+		finalArr[2] = (byte) ((convertBase64Char(arr[2]) << 6) + (convertBase64Char(arr[3])));
+		return finalArr;     
 	}
 
 	// 3. Complete this method so that it takes in a string of any length
 	// and returns the full byte array of the decoded base64 characters.
 	public static byte[] base64StringToByteArray(String file) {
-		return null;
+		
+		
+		char[] arr = file.toCharArray();
+		byte[] finalArr = new byte[arr.length-1];
+		int counter = 0;
+		
+		for(int i =0; i < arr.length; i++) {
+			
+			for(int j = 0; j < 3; j++) {
+				finalArr[counter] = (byte) ((convertBase64Char(arr[i]) <<2) + (convertBase64Char(arr[i+1]) >> 4));
+				counter++;
+				finalArr[counter] = (byte) ((convertBase64Char(arr[i+1])<<4) + (convertBase64Char(arr[i+1])>>4));
+				counter++;
+				finalArr[counter] = (byte) ((convertBase64Char(arr[i+1]) <<6 )+ (convertBase64Char(arr[i+3])));
+				
+			}
+			
+		}
+		
+		return finalArr;
 	}
 }
