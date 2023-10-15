@@ -71,11 +71,12 @@ public class Base64Decoder {
 		// each byte has 8 bits but only first 6 bits are used
 		// take first 6 bits of 1st byte then add with last usable 2 bits from second to
 		// create three 8-bit byte
-		byte[] finalArr = new byte[3];      //zeros on left              //zeros in middle
-		char[] arr = s.toCharArray(); 
+		byte[] finalArr = new byte[3];      
+		char[] arr = s.toCharArray();     //11111100 + 00000011
 		finalArr[0] = (byte) ((convertBase64Char(arr[0]) << 2) + (convertBase64Char(arr[1]) >> 4));
 		finalArr[1] = (byte) ((convertBase64Char(arr[1]) << 4) + (convertBase64Char(arr[2]) >> 2));
 		finalArr[2] = (byte) ((convertBase64Char(arr[2]) << 6) + (convertBase64Char(arr[3])));
+				
 		return finalArr;     
 	}
 
@@ -85,20 +86,20 @@ public class Base64Decoder {
 		
 		
 		char[] arr = file.toCharArray();
-		byte[] finalArr = new byte[arr.length-1];
+		//4 character = 3 bytes
+		byte[] finalArr  = new byte[(file.length()*3)/4];
 		int counter = 0;
 		
-		for(int i =0; i < arr.length; i++) {
+		for(int i =0; i < file.length(); i= i+4) { //loop every 4 characters
+			int char1 = convertBase64Char(file.charAt(i));
+			int char2 = convertBase64Char(file.charAt(i+1));
+			int char3 = convertBase64Char(file.charAt(i+2));
+			int char4 = convertBase64Char(file.charAt(i+3));
 			
-			for(int j = 0; j < 3; j++) {
-				finalArr[counter] = (byte) ((convertBase64Char(arr[i]) <<2) + (convertBase64Char(arr[i+1]) >> 4));
-				counter++;
-				finalArr[counter] = (byte) ((convertBase64Char(arr[i+1])<<4) + (convertBase64Char(arr[i+1])>>4));
-				counter++;
-				finalArr[counter] = (byte) ((convertBase64Char(arr[i+1]) <<6 )+ (convertBase64Char(arr[i+3])));
-				
-			}
-			
+			finalArr[counter++] = (byte) ((char1 << 2) + (char2 >> 4));
+			finalArr[counter++] = (byte) ((char2 << 4) + (char3 >> 2));
+			finalArr[counter++] = (byte) ((char3 << 6) + (char4));
+
 		}
 		
 		return finalArr;
